@@ -1,3 +1,4 @@
+import { type DeepPartial } from "ai";
 import { z } from "zod";
 
 const baseSchema = z.object({
@@ -48,3 +49,28 @@ export function getCurriculumSchema(numberOfSections: number) {
       .describe("A list of content sections"),
   });
 }
+
+type TParagraphSection = z.infer<typeof paragraphSchema>;
+export type TInnerParagraphSection = DeepPartial<
+  TParagraphSection["paragraph_section"]
+>;
+
+type TShortAnswerSection = z.infer<typeof shortAnswerSchema>;
+export type TInnerShortAnswerSection = DeepPartial<
+  TShortAnswerSection["short_answer_section"]
+>;
+
+type TMultipleChoiceSection = z.infer<typeof multipleChoiceSchema>;
+export type TInnerMultipleChoiceSection = DeepPartial<
+  TMultipleChoiceSection["multiple_choice_section"]
+>;
+
+type TEndSection = z.infer<typeof endSchema>;
+export type TInnerEndSection = DeepPartial<TEndSection["end_section"]>;
+
+type TSection =
+  | TParagraphSection
+  | TShortAnswerSection
+  | TMultipleChoiceSection
+  | TEndSection;
+export type TPartialSection = DeepPartial<TSection>;

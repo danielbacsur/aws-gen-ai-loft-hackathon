@@ -28,8 +28,9 @@
       let width, height, center;
       const circles = [];
       const circleCount = 20;
-      const dotsPerCircle = 400;
+      let dotsPerCircle = 400;
       let radius;
+      let fontSize = 10;
       function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
@@ -38,6 +39,13 @@
         ctx.scale(devicePixelRatio, devicePixelRatio);
         center = { x: width / 2, y: height / 2 };
         radius = Math.min(width, height) * 0.3;
+        if (width < 600) {
+          fontSize = 7;
+          dotsPerCircle = 200;
+        } else {
+          fontSize = 10;
+          dotsPerCircle = 400;
+        }
       }
 
       function generateRandomNumbers(count, sum) {
@@ -126,7 +134,7 @@
           ctx.fill();
 
           const centerDot = this.dots[0];
-          ctx.font = "100 10px Arial, sans-serif";
+          ctx.font = `100 ${fontSize}px Arial, sans-serif`;
           ctx.textRendering = "geometricPrecision";
           ctx.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
           ctx.textAlign = "center";

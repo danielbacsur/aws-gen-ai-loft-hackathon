@@ -7,6 +7,7 @@ import { getCurriculumSchema } from "@/schemas/curriculum";
 import { CircleThing } from "@/components/circle-thing";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Section } from "@/components/section";
 
 const NUMBER_OF_SECTIONS = 12;
 
@@ -70,8 +71,18 @@ export default function Page() {
             "transition-all duration-500"
           )}
         >
-          <h1>What do you want to learn today?</h1>
+          <div className="container mx-auto px-8 py-12">
+            <h1>
+              What do you want <br /> to learn today?
+            </h1>
+          </div>
         </div>
+        <div
+          className={cn(
+            object ? "" : "sm:flex-none h-60 md:h-0 bg-transparent",
+            "transition-all duration-500"
+          )}
+        ></div>
         <div
           className={cn(
             "overflow-hidden grid place-items-center",
@@ -81,7 +92,7 @@ export default function Page() {
         >
           <div className="container mx-auto px-8 py-4 h-full flex flex-col justify-between">
             <div>
-              {JSON.stringify(object?.sections?.[curriculumProgress], null, 2)}
+              <Section section={object?.sections?.[curriculumProgress]} />
             </div>
             <div className="flex justify-between">
               <button onClick={previousSection}>Previous</button>
@@ -111,7 +122,7 @@ export default function Page() {
       <div
         className={cn(
           "absolute top-0 left-0 right-0 bottom-0 -z-10 pointer-events-none",
-          object ? "opacity-0" : "opacity-100"
+          object ? "opacity-0" : "opacity-50"
         )}
       >
         <CircleThing />
