@@ -90,14 +90,8 @@ export default function Page() {
             "transition-all duration-500"
           )}
         >
-          <div className="container mx-auto px-8 py-4 h-full flex flex-col justify-between">
-            <div>
-              <Section section={object?.sections?.[curriculumProgress]} />
-            </div>
-            <div className="flex justify-between">
-              <button onClick={previousSection}>Previous</button>
-              <button onClick={nextSection}>Next</button>
-            </div>
+          <div className="container mx-auto px-8 py-4 h-full flex flex-col justify-center max-w-2xl">
+            <Section section={object?.sections?.[curriculumProgress]} />
           </div>
         </div>
         <div className={cn("flex-none h-32 text-center")}>

@@ -4,7 +4,7 @@ import {
   type TInnerShortAnswerSection,
   type TPartialSection,
 } from "@/schemas/curriculum";
-import { Confetti } from "./confetti";
+import { Confetti } from "@/components/confetti";
 
 export function Section({ section }: { section: TPartialSection | undefined }) {
   if (!section) return null;
@@ -30,10 +30,10 @@ export function Section({ section }: { section: TPartialSection | undefined }) {
 
 function ParagraphSection({ section }: { section: TInnerParagraphSection }) {
   return (
-    <section>
-      <h2>Paragraph Section</h2>
+    <section className="w-full">
+      <h2>{section.paragraph_title}</h2>
 
-      <p>{section.paragrah_content}</p>
+      <p>{section.paragraph_content}</p>
     </section>
   );
 }
@@ -44,10 +44,8 @@ function ShortAnswerSection({
   section: TInnerShortAnswerSection;
 }) {
   return (
-    <section>
-      <h2>Short Answer Section</h2>
-
-      <p>{section.question_content}</p>
+    <section className="w-full">
+      <h2>{section.question_content}</h2>
 
       <p>Expected answer: {section.expected_answer}</p>
     </section>
@@ -60,10 +58,8 @@ function MultipleChoiceSection({
   section: TInnerMultipleChoiceSection;
 }) {
   return (
-    <section>
-      <h2>Multiple Choice Section</h2>
-
-      <p>{section.question_content}</p>
+    <section className="w-full">
+      <h2>{section.question_content}</h2>
 
       <ul>
         {section.choices?.map((choice, i) => (
@@ -78,7 +74,7 @@ function MultipleChoiceSection({
 
 function EndSection() {
   return (
-    <section>
+    <section className="w-full">
       <h2>🎉 End Section 🎉</h2>
       <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
         <Confetti isActive duration={5000} />

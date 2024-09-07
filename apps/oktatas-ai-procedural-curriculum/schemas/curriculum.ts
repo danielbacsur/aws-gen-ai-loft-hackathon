@@ -9,7 +9,8 @@ const baseSchema = z.object({
 
 const paragraphSchema = z.object({
   paragraph_section: baseSchema.extend({
-    paragrah_content: z.string(),
+    paragraph_title: z.string(),
+    paragraph_content: z.string(),
   }),
 });
 
