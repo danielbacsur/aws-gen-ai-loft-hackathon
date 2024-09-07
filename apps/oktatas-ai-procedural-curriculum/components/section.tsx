@@ -4,6 +4,7 @@ import {
   type TInnerShortAnswerSection,
   type TPartialSection,
 } from "@/schemas/curriculum";
+import { Confetti } from "./confetti";
 
 export function Section({ section }: { section: TPartialSection | undefined }) {
   if (!section) return null;
@@ -79,6 +80,9 @@ function EndSection() {
   return (
     <section>
       <h2>🎉 End Section 🎉</h2>
+      <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
+        <Confetti isActive duration={5000} />
+      </div>
     </section>
   );
 }
