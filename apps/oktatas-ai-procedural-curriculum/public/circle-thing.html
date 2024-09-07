@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" / />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" / />
+    <title>Large Sphere with Fast Rotating Dense Circles</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="animationCanvas"></canvas>
+    <script>
+      const canvas = document.getElementById("animationCanvas");
+      const ctx = canvas.getContext("2d", { alpha: false });
+      let width, height, center;
+      const circles = [];
+      const circleCount = 50;
+      const dotsPerCircle = 600;
+      const radius = 350;
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * devicePixelRatio;
+        canvas.height = height * devicePixelRatio;
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        ctx.scale(devicePixelRatio, devicePixelRatio);
+        center = { x: width / 2, y: height / 2 };
+      }
+
+      function generateRandomNumbers(count, sum) {
+        let numbers = [];
+        let currentSum = 0;
+        for (let i = 0; i < count - 1; i++) {
+          let remainingSum = sum - currentSum;
+          let maxValue = remainingSum / (count - i);
+          let randomValue = Math.random() * maxValue;
+          randomValue = parseFloat(randomValue.toFixed(8));
+          numbers.push(randomValue);
+          currentSum += randomValue;
+        }
+        numbers.push(parseFloat((sum - currentSum).toFixed(8)));
+        return numbers;
+      }
+
+      const numbers = generateRandomNumbers(circleCount, 8);
+
+      class Circle {
+        constructor(index) {
+          this.index = index;
+          this.currentNumber = 0;
+          this.targetNumber = numbers[index];
+          this.updateSpeed = 0.00001 + Math.random() * 0.00002;
+          this.axisX = Math.random() * Math.PI * 2;
+          this.axisY = Math.random() * Math.PI * 2;
+          this.axisZ = Math.random() * Math.PI * 2;
+          this.speedX = (Math.random() - 0.5) * 0.01; // Increased speed
+          this.speedY = (Math.random() - 0.5) * 0.01; // Increased speed
+          this.speedZ = (Math.random() - 0.5) * 0.01; // Increased speed
+          this.dots = this.createDots();
+          this.opacity = Math.random() * 0.5 + 0.5;
+          this.fadeSpeed = (Math.random() - 0.5) * 0.01;
+        }
+
+        createDots() {
+          const dots = [];
+          for (let i = 0; i < dotsPerCircle; i++) {
+            const angle = (i / dotsPerCircle) * Math.PI * 2;
+            dots.push({ x: Math.cos(angle), y: Math.sin(angle), z: 0 });
+          }
+          return dots;
+        }
+
+        update() {
+          this.axisX += this.speedX;
+          this.axisY += this.speedY;
+          this.axisZ += this.speedZ;
+          this.currentNumber +=
+
+                       (this.targetNumber - this.currentNumber) * this.updateSpeed;
+          this.opacity += this.fadeSpeed;
+          if (this.opacity > 1 || this.opacity < 0.5) {
+            this.fadeSpeed = -this.fadeSpeed;
+          }
+          this.opacity = Math.max(0.5, Math.min(1, this.opacity));
+
+          for (const dot of this.dots) {
+            let { x, y, z } = dot;
+            [y, z] = [
+              
+              y * Math.cos(this.axisX) - z * Math.sin(this.axisX),
+
+                           y * Math.sin(this.axisX) + z * Math.cos(this.axisX),
+            ,
+            ];
+            [x, z] = [
+              
+              x * Math.cos(this.axisY) + z * Math.sin(this.axisY),
+
+                           -x * Math.sin(this.axisY) + z * Math.cos(this.axisY),
+            ,
+            ];
+            [x, y] = [
+              
+              x * Math.cos(this.axisZ) - y * Math.sin(this.axisZ),
+             
+              x * Math.sin(this.axisZ) + y * Math.cos(this.axisZ),
+            ,
+            ];
+            const scale = 1000 / (1000 + z * radius);
+            dot.renderX = center.x + x * radius * scale;
+            dot.renderY = center.y + y * radius * scale;
+          }
+        }
+
+        draw(ctx) {
+          ctx.strokeStyle = `rgba(0, 0, 0, ${0.5 * this.opacity})`;
+          ctx.fillStyle = `rgba(0, 0, 0, ${0.7 * this.opacity})`;
+          ctx.beginPath();
+          for (const dot of this.dots) {
+            ctx.moveTo(dot.renderX, dot.renderY);
+            ctx.arc(dot.renderX, dot.renderY, 0.5, 0, Math.PI * 2);
+          }
+          ctx.fill();
+
+          const centerDot = this.dots[0];
+          ctx.font = "100 10px Arial, sans-serif";
+          ctx.textRendering = "geometricPrecision";
+          ctx.fillStyle = `rgba(0, 0, 0, ${this.opacity})`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(
+            
+            this.currentNumber.toFixed(8),
+           
+            centerDot.renderX,
+           
+            centerDot.renderY
+          
+          );
+        }
+      }
+
+      function createCircles() {
+        for (let i = 0; i < circleCount; i++) {
+          circles.push(new Circle(i));
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, width, height);
+        for (const circle of circles) {
+          circle.update();
+          circle.draw(ctx);
+        }
+        requestAnimationFrame(animate);
+      }
+
+      function init() {
+        createCircles();
+        animate();
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+      init();
+    </script>
+  </body>
+  <script type="module">
+    function sendEmbedHeight() {
+      window.parent.postMessage({ embedHeight: height }, "*");
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      if (entries.length !== 1) return;
+      const entry = entries[0];
+      if (entry.target !== document.body) return;
+      height = entry.contentRect.height;
+      sendEmbedHeight();
+    });
+    observer.observe(document.body);
+
+    window.addEventListener("message", (event) => {
+      if (event.source !== window.parent) return;
+      if (event.data !== "getEmbedHeight") return;
+      sendEmbedHeight();
+    });
+  </script>
+</html>
