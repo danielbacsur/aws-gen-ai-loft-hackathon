@@ -1,5 +1,8 @@
 {
   "name": "@oktatas-ai/oktatas-ai",
   "version": "0.0.0",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "apps/oktatas-ai-procedural-curriculum"
+  ]
 }
