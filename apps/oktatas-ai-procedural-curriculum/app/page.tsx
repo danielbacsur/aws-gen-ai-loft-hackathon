@@ -8,7 +8,8 @@ import { CircleThing } from "@/components/circle-thing";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Section } from "@/components/section";
-import { checkAnswer } from "./actions/check-answer/route";
+import { checkAnswer } from "./actions/check-answer";
+import { toast } from "sonner";
 
 const NUMBER_OF_SECTIONS = 12;
 
@@ -49,7 +50,10 @@ function useCurriculum() {
 
           setInput("");
           if (result.isCorrect) {
+            toast.success("Correct!");
             setProgress((prev) => Math.min(prev + 1, NUMBER_OF_SECTIONS));
+          } else {
+            toast.error(result.explanation);
           }
         } else if (
           "multiple_choice_section" in currentSection &&
@@ -68,7 +72,10 @@ function useCurriculum() {
           });
           setInput("");
           if (result.isCorrect) {
+            toast.success("Correct!");
             setProgress((prev) => Math.min(prev + 1, NUMBER_OF_SECTIONS));
+          } else {
+            toast.error(result.explanation);
           }
         } else if (
           "paragraph_section" in currentSection &&
@@ -175,7 +182,7 @@ export default function Page() {
             </div>
           </div>
           <div className={cn("flex-none h-32 text-center")}>
-            <div className="container mx-auto px-8 py-4 animate-pulse">
+            <div className="container mx-auto px-8 py-4 animates-pulse">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -198,10 +205,10 @@ export default function Page() {
                       value={input}
                       ref={inputRef}
                       onChange={(e) => setInput(e.target.value)}
-                      className="rounded-full h-14 backdrop-filter backdrop-blur-md bg-white/80 shadow-lg"
+                      className="rounded-full h-14 backdrop-filter backdrop-blur-md text-lg bg-white/80 pl-4 shadow-lg"
                     />
                     <button
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                      className="absolute text-lg right-4 top-1/2 transform -translate-y-1/2 px-4 bg-black text text-white rounded-full py-1"
                       type="submit"
                     >
                       Learn
@@ -223,7 +230,7 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 text-[8px] text-gray-400">
+      <div className="absolute bottom-0 left-0 text-[5px] text-gray-400 pointer-events-none">
         {JSON.stringify(object?.sections?.[progress])}
       </div>
     </>

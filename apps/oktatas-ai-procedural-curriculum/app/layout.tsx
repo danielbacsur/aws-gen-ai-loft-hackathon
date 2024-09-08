@@ -4,6 +4,7 @@ import { Noto_Sans as NotoSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 const notoSans = NotoSans({
   variable: "--font-noto-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <Toaster richColors duration={5000} />
         </ThemeProvider>
       </body>
     </html>

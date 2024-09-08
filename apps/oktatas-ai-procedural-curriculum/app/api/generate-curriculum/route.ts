@@ -2,6 +2,8 @@ import { getCurriculumSchema } from "@/schemas/curriculum";
 import { openai } from "@ai-sdk/openai";
 import { streamObject } from "ai";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   const { query, numberOfSections } = (await req.json()) as {
     query: string;

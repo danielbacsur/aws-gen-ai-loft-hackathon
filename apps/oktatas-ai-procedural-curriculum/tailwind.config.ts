@@ -74,7 +74,7 @@ const config: Config = {
           },
         },
         "text-highlight": {
-          "0%": { color: "grey" },
+          "0%": { color: "#ff00ff" },
           "100%": { color: "black" },
         },
       },
