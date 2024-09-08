@@ -1,3 +1,5 @@
+"use client";
+
 import {
   type TInnerMultipleChoiceSection,
   type TInnerParagraphSection,
@@ -6,7 +8,13 @@ import {
 } from "@/schemas/curriculum";
 import { Confetti } from "@/components/confetti";
 
-export function Section({ section }: { section: TPartialSection | undefined }) {
+export function Section({
+  section,
+  submit,
+}: {
+  section: TPartialSection | undefined;
+  submit: () => Promise<void>;
+}) {
   if (!section) return null;
 
   if ("paragraph_section" in section && section.paragraph_section) {
@@ -20,7 +28,12 @@ export function Section({ section }: { section: TPartialSection | undefined }) {
     "multiple_choice_section" in section &&
     section.multiple_choice_section
   ) {
-    return <MultipleChoiceSection section={section.multiple_choice_section} />;
+    return (
+      <MultipleChoiceSection
+        section={section.multiple_choice_section}
+        submit={submit}
+      />
+    );
   } else if ("end_section" in section) {
     return <EndSection />;
   }
@@ -46,28 +59,34 @@ function ShortAnswerSection({
   return (
     <section className="w-full">
       <h2>{section.question_content}</h2>
-
-      <p>Expected answer: {section.expected_answer}</p>
     </section>
   );
 }
 
 function MultipleChoiceSection({
   section,
+  submit,
 }: {
   section: TInnerMultipleChoiceSection;
+  submit: (fallback: string) => Promise<void>;
 }) {
   return (
     <section className="w-full">
       <h2>{section.question_content}</h2>
 
-      <ul>
+      <div className="grid grid-cols-2 grid-rows-2 gap-4">
         {section.choices?.map((choice, i) => (
-          <li key={i}>{choice}</li>
+          <button
+            key={i}
+            className="p-4 border border-gray-300 rounded-md"
+            onClick={() => {
+              submit(choice || "");
+            }}
+          >
+            {choice}
+          </button>
         ))}
-      </ul>
-
-      <p>Correct choice: {section.correct_choice}</p>
+      </div>
     </section>
   );
 }
